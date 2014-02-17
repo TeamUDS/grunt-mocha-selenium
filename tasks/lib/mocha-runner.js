@@ -2,17 +2,30 @@ var Mocha = require('mocha');
 var Module = require('module');
 var path = require('path');
 
-module.exports = function(options, browser, grunt, fileGroup){
+require('mocha-as-promised')();
+
+module.exports = function(options, browser, grunt, wd, fileGroup){
 
   // Set up the mocha instance with options and files.
   // This is copied from Mocha.prototype.run
   // We need to do this because we need the runner, and the runner
   //  is only held in that closure, not assigned to any instance properties.
+  var mochaAsPromised = require("mocha-as-promised");
   var mocha = new Mocha(options);
 
   mocha.suite.on('pre-require', function (context, file, m) {
     this.ctx.browser = browser;
+    this.ctx.Asserter = wd.Asserter;
+    this.ctx.asserters = wd.asserters; 
+    this.ctx.KEYS = wd.SPECIAL_KEYS;
+    this.ctx.Q = wd.Q;
   });
+
+  if (options.screenshotAfterEach) {
+      mocha.suite.afterEach(function() {
+         browser.saveScreenshot(options.screenshotDir + '/' + this.capabilities.browserName + "-" + this.currentTest.title)
+      });
+  }
 
   grunt.file.expand({filter: 'isFile'}, fileGroup.src).forEach(function (f) {
     var filePath = path.resolve(f);

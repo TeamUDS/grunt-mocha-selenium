@@ -10,13 +10,16 @@ module.exports = function(grunt) {
   var wd = require('wd');
   var phantomjs = require('phantomjs');
   var path = require('path');
+  var chai = require("chai");
+  var chaiAsPromised = require("chai-as-promised");
 
   grunt.registerMultiTask('mochaSelenium', 'Run functional tests with mocha', function() {
     var done = this.async();
     // Retrieve options from the grunt task.
     var options = this.options({
       browserName: 'firefox',
-      usePromises: false,
+      usePromises: true,
+      useChaining: true,
       useSystemPhantom: false
     });
 
@@ -97,7 +100,12 @@ module.exports = function(grunt) {
     var remote = options.usePromises ? 'promiseRemote' : 'remote';
     remote = options.useChaining ? 'promiseChainRemote' : remote;
 
+    chai.use(chaiAsPromised);
+    chai.should();
+    chaiAsPromised.transferPromiseness = wd.transferPromiseness;
+
     var browser = wd[remote](selenium.host, selenium.port, selenium.username, selenium.accesskey);
+
 
     grunt.log.debug("Selenium options: " + JSON.stringify(options));
 
@@ -115,7 +123,11 @@ module.exports = function(grunt) {
         return;
       }
 
-      var runner = mocha(options, browser, grunt, fileGroup);
+      if (options.viewport) {
+          browser.setWindowSize(options.viewport.width, options.viewport.height);
+      }
+
+      var runner = mocha(options, browser, grunt, wd, fileGroup);
       // Create the domain, and pass any errors to the mocha runner
       var domain = createDomain();
       domain.on('error', runner.uncaught.bind(runner));
