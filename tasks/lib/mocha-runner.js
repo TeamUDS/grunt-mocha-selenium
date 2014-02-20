@@ -23,7 +23,10 @@ module.exports = function(options, browser, grunt, wd, fileGroup){
 
   if (options.screenshotAfterEach) {
       mocha.suite.afterEach(function() {
-         browser.saveScreenshot(options.screenshotDir + '/' + this.capabilities.browserName + "-" + this.currentTest.title)
+         var title = this.currentTest.title;
+         browser.sessionCapabilities().then(function(c) { 
+             browser.saveScreenshot(options.screenshotDir + '/' + c.browserName + "-" + title)
+         })
       });
   }
 
