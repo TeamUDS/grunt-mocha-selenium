@@ -22,7 +22,6 @@ module.exports = function(options, browser, grunt, wd, fileGroup){
     browser.sessionCapabilities().then(function(c) { 
         browserName = c.browserName;
     });
-    testFile = path.basename(file).replace(/\..*$/, '');
     screenshotNumber = 0;
 
     this.ctx.browser = browser;
@@ -30,6 +29,7 @@ module.exports = function(options, browser, grunt, wd, fileGroup){
     this.ctx.asserters = wd.asserters; 
     this.ctx.KEYS = wd.SPECIAL_KEYS;
     this.ctx.Q = wd.Q;
+    this.ctx.wd = wd;
   });
 
   if (options.screenshotAfterEach && options.screenshotDir) {
@@ -67,6 +67,10 @@ module.exports = function(options, browser, grunt, wd, fileGroup){
   var runner = new Mocha.Runner(suite);
   var reporter = new mocha._reporter(runner);
 
+  runner.on('suite', function(suite){
+      testFile = suite.title;
+  });
+  
   runner.ignoreLeaks = options.ignoreLeaks;
   runner.asyncOnly = options.asyncOnly;
 
