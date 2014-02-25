@@ -12,8 +12,19 @@ module.exports = function(options, browser, grunt, wd, fileGroup){
   //  is only held in that closure, not assigned to any instance properties.
   var mochaAsPromised = require("mocha-as-promised");
   var mocha = new Mocha(options);
+  var browserName = 'Unknown';
+  var testFile = 'Unknown File';
+  var screenshotNumber = 0;
 
   mocha.suite.on('pre-require', function (context, file, m) {
+    browser.setImplicitWaitTimeout(options.implicitWaitTimeout || 100);
+    browser.setAsyncScriptTimeout(options.asyncScriptTimeout || 5000);
+    browser.sessionCapabilities().then(function(c) { 
+        browserName = c.browserName;
+    });
+    testFile = path.basename(file).replace(/\..*$/, '');
+    screenshotNumber = 0;
+
     this.ctx.browser = browser;
     this.ctx.Asserter = wd.Asserter;
     this.ctx.asserters = wd.asserters; 
@@ -21,12 +32,21 @@ module.exports = function(options, browser, grunt, wd, fileGroup){
     this.ctx.Q = wd.Q;
   });
 
-  if (options.screenshotAfterEach) {
+  if (options.screenshotAfterEach && options.screenshotDir) {
+      if (grunt.file.exists(options.screenshotDir)) {
+          grunt.file.recurse(options.screenshotDir, grunt.file.delete);
+      }
+      grunt.file.mkdir(options.screenshotDir);
+
       mocha.suite.afterEach(function() {
-         var title = this.currentTest.title;
-         browser.sessionCapabilities().then(function(c) { 
-             browser.saveScreenshot(options.screenshotDir + '/' + c.browserName + "-" + title)
-         })
+         var number = screenshotNumber++;
+         var filename = [
+             testFile, 
+             ((number + '').length === 1 ? '0' : '') + ('' + number),
+             this.currentTest.title,
+             browserName
+         ].join('-');
+         return browser.saveScreenshot(options.screenshotDir + '/' + filename + ".png")
       });
   }
 
