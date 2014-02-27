@@ -2,8 +2,8 @@
   "name": "grunt-mocha-selenium",
   "version": "0.7.0",
   "description": "Run functional Mocha tests with webdriver against a local selenium instance.",
-  "homepage": "https://github.com/wookiehangover/grunt-mocha-selenium",
-  "bugs": "https://github.com/wookiehangover/grunt-mocha-selenium/issues",
+  "homepage": "https://github.com/jharwig/grunt-mocha-selenium",
+  "bugs": "https://github.com/jharwig/grunt-mocha-selenium/issues",
   "author": {
     "name": "Sam Breed",
     "email": "sam@quickleft.com"
@@ -18,7 +18,7 @@
   "main": "Gruntfile.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wookiehangover/grunt-mocha-selenium"
+    "url": "https://github.com/jharwig/grunt-mocha-selenium"
   },
   "licenses": [
     {
@@ -32,7 +32,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "selenium-launcher": "git://github.com/wookiehangover/nodejs-selenium-launcher.git",
+    "selenium-launcher": "git://github.com/jharwig/nodejs-selenium-launcher.git",
     "wd": "~0.2.0",
     "mocha": "~1.17.1",
     "phantomjs": "~1.9.1",
