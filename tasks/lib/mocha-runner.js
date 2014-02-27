@@ -69,6 +69,7 @@ module.exports = function(options, browser, grunt, wd, fileGroup){
 
   runner.on('suite', function(suite){
       testFile = suite.title;
+      screenshotNumber = 0;
   });
   
   runner.ignoreLeaks = options.ignoreLeaks;
