@@ -43,7 +43,7 @@ module.exports = function(options, browser, grunt, wd, fileGroup){
          var filename = [
              testFile, 
              ((number + '').length === 1 ? '0' : '') + ('' + number),
-             this.currentTest.title.replace(/[^a-zA-Z0-9 ]+/g, '').replace(/(^\s*|\s*$)/g, '').replace(/\s+/g, '_').substring(0, 200)
+             this.currentTest.title.replace(/[^a-zA-Z0-9 ]+/g, '').replace(/(^\s*|\s*$)/g, '').replace(/\s+/g, '_').substring(0, 200),
              browserName
          ].join('-');
          return browser.saveScreenshot(options.screenshotDir + '/' + filename.substring(0,250) + ".png")
