@@ -33,10 +33,9 @@ module.exports = function(options, browser, grunt, wd, fileGroup){
   });
 
   if (options.screenshotAfterEach && options.screenshotDir) {
-      if (grunt.file.exists(options.screenshotDir)) {
-          grunt.file.recurse(options.screenshotDir, grunt.file.delete);
+      if (!grunt.file.exists(options.screenshotDir)) {
+          grunt.file.mkdir(options.screenshotDir);
       }
-      grunt.file.mkdir(options.screenshotDir);
 
       mocha.suite.afterEach(function() {
          var number = screenshotNumber++;
