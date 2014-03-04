@@ -1,6 +1,6 @@
 {
   "name": "grunt-mocha-selenium",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Run functional Mocha tests with webdriver against a local selenium instance.",
   "homepage": "https://github.com/jharwig/grunt-mocha-selenium",
   "bugs": "https://github.com/jharwig/grunt-mocha-selenium/issues",
