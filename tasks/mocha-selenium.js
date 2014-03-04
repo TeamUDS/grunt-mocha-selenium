@@ -43,10 +43,13 @@ module.exports = function(grunt) {
     // Better, deals with more than just grunt?
 
     // Restore prior state.
-    var restore = function() {
+    var restore = function(err) {
       mochaReporterBase.useColors = priorUseColors;
       unmanageExceptions();
-      done();
+      if (err) {
+          grunt.log.error(err + ' tests reported errors')
+          done(err === 0)
+      } else done();
     };
 
     grunt.util.async.forEachSeries(this.files, function(fileGroup, next){
@@ -92,9 +95,7 @@ module.exports = function(grunt) {
 
     // When we're done with mocha, dispose the domain
     var mochaDone = function(errCount) {
-      var withoutErrors = (errCount === 0);
-      // Indicate whether we failed to the grunt task runner
-      next(withoutErrors);
+        next(errCount);
     };
     
     var remote = options.usePromises ? 'promiseRemote' : 'remote';
@@ -110,7 +111,7 @@ module.exports = function(grunt) {
     grunt.log.debug("Selenium options: " + JSON.stringify(options));
 
     browser.on('status', function(info){
-      grunt.log.writeln('\x1b[36m%s\x1b[0m', info);
+      grunt.log.debug('\x1b[36m%s\x1b[0m', info);
     });
 
     browser.on('command', function(meth, path, data){
