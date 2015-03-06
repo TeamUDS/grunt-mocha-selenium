@@ -32,7 +32,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "selenium-launcher": "git://github.com/jharwig/nodejs-selenium-launcher.git",
+    "selenium-launcher": "git://github.com/jharwig/nodejs-selenium-launcher.git#d33d5521b624930abe0578a1271b54a6285e53ed",
     "wd": "~0.2.0",
     "mocha": "~1.17.1",
     "phantomjs": "~1.9.1",
